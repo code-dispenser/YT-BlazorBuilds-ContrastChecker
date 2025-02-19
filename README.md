@@ -4,7 +4,7 @@
 
 This repository contains the solution from my YouTube video showing how to build an accessible contrast checker component.
 
-YouTube video: TBA
+YouTube video: https://youtu.be/bmEfDpuoWu4
 
 Coffees welcomed : https://ko-fi.com/codedispenser
 
