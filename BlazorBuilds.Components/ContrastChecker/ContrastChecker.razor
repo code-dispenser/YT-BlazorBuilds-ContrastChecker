@@ -1,0 +1,114 @@
+﻿
+<div class="contrast-checker" data-static="@GlobalValues.GetStyleAsValue(StyleAs)">
+    <span aria-live="assertive" class="contrast-checker__screen-reader-alert">@_ariaAlertMessage</span>
+    <div class="contrast-checker__colour">
+        <label for="foreground_@_colourOneID" class="contrast-checker__label">Foreground colour:</label>
+        <div class="contrast-checker__fields">
+            <input id="@_colourOneID" class="contrast-checker__picker" type="color" value="@_hexColourOne" @oninput="ColourOneOnInputHandler" aria-hidden="true" tabindex="-1" />
+            <button class="contrast-checker__opener" type="button" onclick="document.getElementById('@_colourOneID').click();" aria-label="Foreground colour picker">
+                <span class="eyedropper-icon contrast-checker__icon"></span>
+            </button>
+            <input id="foreground_@_colourOneID" type="text" class="contrast-checker__input" @bind-value:get="_hexColourOne" @bind-value:event="oninput" @bind-value:set="OnColourOneInput" maxlength="7"
+                   aria-invalid="@((!_colourOneIsValid).ToString().ToLower())" aria-describedby="@(_colourOneIsValid ? null : _errorMessageID)" @onkeydown="HandleColourOneMaxlength" required />
+        </div>
+    </div>
+
+    <button class="contrast-checker__colour-swaper" type="button" aria-label="Swap colours" @onclick="SwapColours">
+        <span class="swap-icon" aria-hidden="true"></span>
+    </button>
+
+    <div class="contrast-checker__colour">
+        <label for="background_@_colourTwoID" class="contrast-checker__label">Background colour:</label>
+        <div class="contrast-checker__fields">
+            <input id="@_colourTwoID" class="contrast-checker__picker" type="color" value="@_hexColourTwo" @oninput="ColourTwoOnInputHandler" aria-hidden="true" tabindex="-1" />
+
+            <button class="contrast-checker__opener" type="button" onclick="document.getElementById('@_colourTwoID').click();" aria-label="Background colour picker">
+                <span class="eyedropper-icon contrast-checker__icon"></span>
+            </button>
+            <input id="background_@_colourTwoID" type="text" class="contrast-checker__input" @bind-value:get="_hexColourTwo" @bind-value:event="oninput" @bind-value:set="OnColourTwoInput" maxlength="7"
+                   aria-invalid="@((!_colourTwoIsValid).ToString().ToLower())" aria-describedby="@(_colourTwoIsValid ? null : _errorMessageID)" @onkeydown="HandleColourTwoMaxlength" required />
+        </div>
+    </div>
+
+    <div class="contrast-checker__preview" style="color:@_displayTextColour;background-color:@_displayBgColour;">
+        <h3 class="contrast-checker__title" style="color:@_displayTextColour;">Preview Area</h3>
+
+        <div style="font-size:@($"{Large_Font_PX}px;")">Large Text: The five boxing wizards jump quickly.</div>
+        <div style="font-size:@($"{Regular_Font_PX}px");">Regular Text: The five boxing wizards jump quickly.</div>
+        <div style="font-size:@($"{Regular_Font_PX}px");">Graphical Objects and UI Elements:</div>
+        <div><input type="text" style="outline-offset:3px; outline:2px solid @_displayTextColour; border:none;" aria-label="Textbox for border display" /></div>
+        <div class="contrast-checker__icon-group">
+            <span class="accessibility-icon" aria-label="Accessibility icon"></span>
+            <span class="shopping-cart-icon" aria-label="Shopping cart icon"></span>
+            <span class="blazor-icon" aria-label="Blazor icon"></span>
+            <span class="youtube-icon" aria-label="Youtube icon"></span>
+        </div>
+    </div>
+
+    <div class="contrast-checker__results">
+
+        <h3 class="contrast-checker__title">Contrast Ratio Results</h3>
+        @if (_colourOneIsValid && _colourTwoIsValid)
+        {
+            <div class="contrast-checker__title">
+                @(_contrastRatio == 0 ? "N/A" : _contrastRatio.ToString() + ":1")
+            </div>
+        }
+        else
+        {
+            <div id="@_errorMessageID" class="contrast-checker__error">@GlobalValues.Invalid_Colour_Entry_Message</div>
+        }
+
+
+        <table>
+            <thead>
+                <tr>
+                    <th scope="col">Compliance</th>
+                    <th class="centre-content" scope="col">AA</th>
+                    <th class="centre-content" scope="col">AAA</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Regular text</td>
+                    <td class="centre-content"><span class="contrast-checker__icon @(GetIconResultClass(GlobalValues.Min_AA_Normal_Text_Ratio))" aria-label="@GetPassFailTextForValue(GlobalValues.Min_AA_Normal_Text_Ratio)"></span></td>
+                    <td class="centre-content"><span class="contrast-checker__icon @(GetIconResultClass(GlobalValues.Min_AAA_Normal_Text_Ratio))" aria-label="@GetPassFailTextForValue(GlobalValues.Min_AAA_Normal_Text_Ratio)"></span></td>
+                </tr>
+                <tr>
+                    <td>Large text</td>
+                    <td class="centre-content"><span class="contrast-checker__icon @(GetIconResultClass(GlobalValues.Min_AA_Large_Text_Ratio))" aria-label="@GetPassFailTextForValue(GlobalValues.Min_AA_Large_Text_Ratio)"></span></td>
+                    <td class="centre-content"><span class="contrast-checker__icon @(GetIconResultClass(GlobalValues.Min_AAA_Large_Text_Ratio))" aria-label="@GetPassFailTextForValue(GlobalValues.Min_AAA_Large_Text_Ratio)"></span></td>
+                </tr>
+                <tr>
+                    <td>Graphical objects and UI elements</td>
+                    <td class="centre-content"><span class="contrast-checker__icon @(GetIconResultClass(GlobalValues.Min_Borders_Ratio))" aria-label="@GetPassFailTextForValue(GlobalValues.Min_Borders_Ratio)"></span></td>
+                    <td class="centre-content" aria-label="Not applicable">N/A</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="contrast-checker__requirements">
+        <h3 class="contrast-checker__title">Contrast Requirements</h3>
+        <div class="contrast-checker__levels">
+            <div>
+                <h4>Level AA:</h4>
+                <ul>
+                    <li><strong>Regular text:</strong> Minimum contrast ratio of <strong>@(GlobalValues.Min_AA_Normal_Text_Ratio):1</strong>.</li>
+                    <li><strong>Large text</strong> (at least 18pt regular or 14pt bold): Minimum contrast ratio of <strong>@(GlobalValues.Min_AA_Large_Text_Ratio):1</strong>.</li>
+                    <li><strong>UI elements</strong> (e.g., buttons, input fields): Minimum contrast ratio of <strong>@(GlobalValues.Min_Borders_Ratio):1</strong>.</li>
+                </ul>
+            </div>
+            <div>
+                <h4>Level AAA:</h4>
+                <ul>
+                    <li><strong>Regular text:</strong> Enhanced contrast ratio of <strong>@(GlobalValues.Min_AAA_Normal_Text_Ratio):1</strong>.</li>
+                    <li><strong>Large text</strong> (at least 18pt regular or 14pt bold): Enhanced contrast ratio of <strong>4.5:1</strong>.</li>
+                    <li><strong>UI elements:</strong> Minimum contrast ratio of <strong>@(GlobalValues.Min_Borders_Ratio):1 (applies to both Level AA and AAA)</strong>.</li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+</div>
+

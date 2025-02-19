@@ -1,0 +1,21 @@
+﻿:root {
+    --box-shadow-1: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);
+    --box-shadow-2: 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+    --control-focus-clr: navy;
+    --control-surface-bg: #f2f2f2;
+    --control-border-bg: silver;
+    --control-border-radius: 0.25rem;
+    --control-body-text-clr: #1a1a1a;
+    --control-label-text-clr: #1a1a1a;
+    --control-heading-text-clr: #1a1a1a;
+    --control-body-area-bg: #FFFFFF;
+    --fw-700: 700;
+    --danger-clr: #d92d2b;
+    --success-clr: #28a745;
+    --control-error-text-clr: #d92d2b;
+}
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
